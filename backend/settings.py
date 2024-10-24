@@ -38,8 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    # Apps del proyecto
     'backend.api',
-    'users'#app de usuarios
+    'backend.facturas',
+    'backend.contadores',
+    'backend.pagos'
+    
 ]
 
 MIDDLEWARE = [
@@ -79,9 +83,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'datamine',
-        'USER': 'postgres',
-        'PASSWORD': 'kye9743xs',
+        'NAME': 'luz_mvp',
+        'USER': 'esteban',
+        'PASSWORD': '2018',
         'HOST': 'localhost',
         'PORT': '5432',  # Puerto estándar de PostgreSQL
     }
