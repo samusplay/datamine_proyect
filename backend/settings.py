@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'backend.api',
     'backend.facturas',
     'backend.contadores',
-    'backend.pagos'
+    'backend.pagos',
+    'backend.usuarios'
     
 ]
 
@@ -82,12 +83,8 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'luz_mvp',
-        'USER': 'esteban',
-        'PASSWORD': '2018',
-        'HOST': 'localhost',
-        'PORT': '5432',  # Puerto estándar de PostgreSQL
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "db.sqlite3",
     }
 }
 
