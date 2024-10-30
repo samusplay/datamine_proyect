@@ -1,17 +1,49 @@
-from django.shortcuts import render
-from django.http import HttpRequest
-from django.http import HttpResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Usuario
+from .serializers import UsuarioSerializer
 
-# Create your views here.
-
+# Vista para crear un usuario
+@api_view(['POST'])
 def crear_usuario(request):
-    return HttpResponse("Usuario Creado")
+    serializer = UsuarioSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def editar_usuario(request,id):
-    return HttpResponse(f"Editar usuario con ID {id}")
+# Vista para editar un usuario
+@api_view(['PUT'])
+def editar_usuario(request, id):
+    try:
+        usuario = Usuario.objects.get(id=id)
+    except Usuario.DoesNotExist:
+        return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = UsuarioSerializer(usuario, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def eliminar_usuario(request,id):
-    return HttpResponse(f"Eliminar usurio con ID {id}")
+# Vista para eliminar un usuario
+@api_view(['DELETE'])
+def eliminar_usuario(request, id):
+    try:
+        usuario = Usuario.objects.get(id=id)
+    except Usuario.DoesNotExist:
+        return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+    
+    usuario.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
+# Vista para listar todos los usuarios
+@api_view(['GET'])
 def listar_usuarios(request):
-    return HttpResponse("Lista de usuarios")
+    usuarios = Usuario.objects.all()
+    serializer = UsuarioSerializer(usuarios, many=True)
+    return Response(serializer.data)
+
+

@@ -1,19 +1,9 @@
-from django.shortcuts import render
-from django.http import JsonResponse
-from rest_framework import generics,viewsets
-from .models import Producto
-from .serializers import ProductoSerializer
+from rest_framework import viewsets
+from .models import Usuario
+from .serializers import UsuarioSerializer
 
-
-def ejemplo(request):
-    data={
-        'mensaje':'Bienvenido a la API de consumo energetico'
-    }
-    return JsonResponse(data)
-
-# Create your views here.
-
-class ProductoListCreateView(viewsets.ModelViewSet):
-    queryset=Producto.objects.all()
-    serializer_class=ProductoSerializer
+# Vista que maneja el CRUD de usuarios
+class UsuarioViewSet(viewsets.ModelViewSet):
+    queryset = Usuario.objects.all()  # Obtiene todos los usuarios de la base de datos
+    serializer_class = UsuarioSerializer  # Utiliza el serializer que creamos para los usuarios
 

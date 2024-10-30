@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from django.http import HttpResponseRedirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +25,6 @@ urlpatterns = [
     path('facturas/', include('backend.facturas.urls')),
     path('contadores/', include('backend.contadores.urls')),
     path('pagos/', include('backend.pagos.urls')),
+    path('', lambda request: HttpResponseRedirect('/admin/')),
 
 ]
