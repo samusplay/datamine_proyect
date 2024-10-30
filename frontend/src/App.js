@@ -3,8 +3,6 @@ import './App.css';
 import Usuario from './components/usuario';
 import luz_icono from './luz_icono.png';
 
-
-
 function App() {
   const [usuarios, setUsuarios] = useState([
     { id: 1, nombre: '', tipoUsuario: 'Inquilino' },
@@ -13,27 +11,12 @@ function App() {
 
   const [selectedTipo, setSelectedTipo] = useState('');
   const [nombre, setNombre] = useState('');
+  const [numeroContador, setNumeroContador] = useState('');
+  const [error, setError] = useState('');
 
   // Función simulada para enviar los datos a la API
   const enviarDatosAPI = () => {
-    console.log("Datos enviados a la API:");
-    console.log({ nombre, tipoUsuario: selectedTipo });
-
-    // Código comentado para realizar el POST a la API
-    /*
-    fetch('URL_DE_LA_API', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        nombre: nombre,
-        tipoUsuario: selectedTipo
-      })
-    }).then(response => response.json())
-      .then(data => console.log(data))
-      .catch(error => console.error('Error:', error));
-    */
+    console.log("Datos enviados a la API:", { nombre, tipoUsuario: selectedTipo, numeroContador });
   };
 
   // Maneja la selección del tipo de usuario
@@ -49,10 +32,34 @@ function App() {
     ));
   };
 
+  // Maneja el cambio en el número de contador
+  const handleNumeroContadorChange = (event) => {
+    const value = event.target.value;
+    setNumeroContador(value);
+    
+    // Validación: el número de contador debe ser un número positivo y de una longitud adecuada
+    if (!/^\d+$/.test(value)) {
+      setError("El número de contador debe contener solo dígitos.");
+    } else if (value.length < 5) {
+      setError("El número de contador debe tener al menos 5 dígitos.");
+    } else {
+      setError('');
+    }
+  };
+
   // Manejar el clic en el botón "continuar"
   const handleContinue = () => {
-    enviarDatosAPI();  // Llamar a la función que simula el envío de datos a la API
-    alert(`Nombre: ${nombre}, Tipo de Usuario: ${selectedTipo}`);
+    if (nombre === '' || selectedTipo === '') {
+      alert("Por favor, ingresa todos los datos.");
+      return;
+    }
+    
+    if (error === '' && numeroContador !== '') {
+      enviarDatosAPI();
+      alert(`Datos registrados:\nNombre: ${nombre}\nTipo de Usuario: ${selectedTipo}\nNúmero de Contador: ${numeroContador}`);
+    } else {
+      alert("Por favor, revisa el número de contador.");
+    }
   };
 
   return (
@@ -87,8 +94,23 @@ function App() {
           </div>
         )}
 
-        {/* Botón Continuar */}
+        {/* Input para ingresar el número de contador */}
         {selectedTipo && nombre && (
+          <div className="formulario">
+            <label htmlFor="numeroContador">Número de Contador:</label>
+            <input 
+              type="text" 
+              id="numeroContador" 
+              value={numeroContador} 
+              onChange={handleNumeroContadorChange} 
+              placeholder="Escribe el número de contador"
+            />
+            {error && <p className="error">{error}</p>}
+          </div>
+        )}
+
+        {/* Botón Continuar */}
+        {selectedTipo && nombre && numeroContador && !error && (
           <button className="continuar-btn" onClick={handleContinue}>
             Continuar
           </button>
@@ -104,20 +126,10 @@ function App() {
         </div>
 
         <img src={luz_icono} className="App-logo" alt="logo" />
-        <p></p>
-        <a
-        className="App-link"
-        href="https://reactjs.org"
-        target="_blank"
-        rel="noopener noreferrer"
-        >
-  
-</a>
-
-      
       </header>
     </div>
   );
 }
 
 export default App;
+

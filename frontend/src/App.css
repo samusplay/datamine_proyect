@@ -62,3 +62,8 @@
   color: #61dafb;
   margin-bottom: 20px;
 }
+.error {
+  color: red;
+  font-size: 0.9rem;
+}
+
