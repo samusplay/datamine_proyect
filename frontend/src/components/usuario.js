@@ -1,11 +1,13 @@
+import React from "react";
 
-const usuario=({nombre,tipousuario}) =>{
-    return(
-        <div>
-            <h2>Informacion del usuario</h2>
-            <p>Nombre:{nombre}</p>
-            <p> Tipo de usuario:{tipoUsuario}</p>
-        </div>
+const Usuario = ({ nombre, tipoUsuario }) => {
+    if (!nombre) return null;  // Si el nombre está vacío, no mostramos nada.
+    return (
+      <div className="usuario">
+        <h2>{nombre}</h2>
+        <p>Tipo de Usuario: {tipoUsuario}</p>
+      </div>
     );
-};
-export default usuario;
+  };
+  
+  export default Usuario;
