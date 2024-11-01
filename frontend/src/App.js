@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import api from './api/api';
 import './App.css';
 import Usuario from './components/usuario';
 import luz_icono from './luz_icono.png';
+
 
 function App() {
   const [usuarios, setUsuarios] = useState([
@@ -14,10 +16,7 @@ function App() {
   const [numeroContador, setNumeroContador] = useState('');
   const [error, setError] = useState('');
 
-  // Función simulada para enviar los datos a la API
-  const enviarDatosAPI = () => {
-    console.log("Datos enviados a la API:", { nombre, tipoUsuario: selectedTipo, numeroContador });
-  };
+ 
 
   // Maneja la selección del tipo de usuario
   const handleTipoChange = (event) => {
@@ -46,6 +45,23 @@ function App() {
       setError('');
     }
   };
+
+  //funcion para enviar los datos a la Api
+  const enviarDatosAPI = async () => {
+    try {
+        const response = await api.post('/usuarios/crear/', {
+            nombre: nombre,
+            tipoUsuario: selectedTipo,
+            numeroContador: numeroContador,
+        });
+        console.log('Datos enviados a la API:', response.data);
+        alert('Usuario creado exitosamente.');
+    } catch (error) {
+        console.error('Error al enviar los datos:', error);
+        alert('Hubo un error al crear el usuario.');
+    }
+};
+
 
   // Manejar el clic en el botón "continuar"
   const handleContinue = () => {

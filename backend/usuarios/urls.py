@@ -7,3 +7,4 @@ urlpatterns = [
     path('eliminar/<int:id>/', views.eliminar_usuario, name='eliminar_usuario'),
     path('', views.listar_usuarios, name='listar_usuarios'),
 ]
+
