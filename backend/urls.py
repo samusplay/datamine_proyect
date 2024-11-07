@@ -22,9 +22,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',include('backend.api.urls')),
     path('usuarios/', include('backend.usuarios.urls')),
-    path('facturas/', include('backend.facturas.urls')),
     path('contadores/', include('backend.contadores.urls')),
     path('pagos/', include('backend.pagos.urls')),
     path('', lambda request: HttpResponseRedirect('/admin/')),
+    path('api/facturas/', include('backend.facturas.urls')),
+
 
 ]
