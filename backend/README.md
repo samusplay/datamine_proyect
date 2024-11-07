@@ -1,169 +1,225 @@
 
 
-```markdown
-# Datamine Project - Backend
+# Backend del Proyecto Datamine
 
-## Descripción General
-Este backend es parte del proyecto Datamine, desarrollado con Django y Django REST Framework. Su objetivo es gestionar la facturación de consumo eléctrico de los usuarios, con funcionalidades específicas para manejar:
-- **Facturas**: Registro de consumo mensual de energía.
-- **Usuarios**: Autenticación y gestión de perfiles de usuarios.
-- **Pagos**: Registro de transacciones realizadas por los usuarios.
+Este documento proporciona una guía detallada para trabajar en el backend del proyecto Datamine. Este sistema utiliza **Django** y **Django REST Framework** para la gestión de usuarios, facturas, pagos y contadores, permitiendo una administración eficiente de datos a través de una **API REST**.
 
-Este README documenta el trabajo realizado en el backend, los endpoints disponibles, y las instrucciones para que el equipo pueda colaborar eficientemente en el desarrollo.
+## Tabla de Contenidos
 
-## Estructura del Proyecto
-```plaintext
-backend/
-├── api/
-├── contadores/
-├── facturas/
-│   ├── migrations/
-│   ├── __init__.py
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── serializers.py
-│   ├── views.py
-│   ├── urls.py
-├── pagos/
-├── usuarios/
-│   ├── migrations/
-│   ├── __init__.py
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── serializers.py
-│   ├── views.py
-│   ├── urls.py
-├── settings.py
-├── urls.py
-└── wsgi.py
-```
+1. [Requisitos](#requisitos)
+2. [Instalación y Configuración](#instalación-y-configuración)
+3. [Ejecución del Servidor y URLs](#ejecución-del-servidor-y-urls)
+4. [Estructura de Carpetas](#estructura-de-carpetas)
+5. [Descripción de Archivos Clave](#descripción-de-archivos-clave)
+6. [Endpoints y Funcionalidades](#endpoints-y-funcionalidades)
+7. [Buenas Prácticas y Colaboración en GitHub](#buenas-prácticas-y-colaboración-en-github)
 
-## Modelos Implementados
+---
 
-### 1. Factura
-Este modelo gestiona el registro del consumo de energía de cada usuario en un período mensual. A continuación, se detallan los atributos y su funcionalidad:
-- **numero_contador**: Identificador del contador del usuario.
-- **contador_mes_anterior**: Valor del contador al finalizar el mes anterior.
-- **contador_mes_actual**: Valor actual del contador al final del mes.
-- **consumo**: Consumo total de energía en el mes (calculado automáticamente).
-- **costo_total**: Costo total del consumo en pesos colombianos (calculado automáticamente).
-- **usuario**: Relación con el modelo de usuario.
-- **fecha_emision**: Fecha de emisión de la factura.
+## Requisitos
 
-### 2. Usuario
-El modelo de usuario gestiona la información básica y autenticación de los usuarios. Este modelo está conectado al frontend para permitir el registro y autenticación de usuarios.
+Para ejecutar este proyecto, asegúrate de tener instalados:
 
-## Endpoints Disponibles
+- **Python** 3.8 o superior
+- **Django** 5.1.2
+- **Django REST Framework**
 
-### Facturas
-El endpoint de facturas permite realizar operaciones CRUD en las facturas de los usuarios. A continuación, se detallan los endpoints específicos:
+## Instalación y Configuración
 
-- **GET /api/facturas/**: Obtiene la lista de facturas registradas.
-- **POST /api/facturas/**: Crea una nueva factura para un usuario. Este endpoint valida automáticamente el consumo y el costo basados en el valor del contador actual y el del mes anterior.
+### Clonar el Repositorio
 
-Ejemplo de datos para el endpoint POST:
-```json
-{
-  "numero_contador": "12345",
-  "contador_mes_actual": 12000,
-  "usuario": 1
-}
-```
+Clona el repositorio desde GitHub:
 
-La respuesta incluirá los campos calculados:
-```json
-{
-  "numero_contador": "12345",
-  "contador_mes_anterior": 11500,
-  "contador_mes_actual": 12000,
-  "consumo": 500,
-  "costo_total": 7500,
-  "usuario": 1,
-  "fecha_emision": "2023-11-07"
-}
-```
-
-#### Validaciones
-- El contador del mes actual debe ser mayor que el del mes anterior.
-- Si ya existe una factura para el mismo usuario y mes, devuelve un error para evitar duplicados.
-
-### Usuarios
-Actualmente, el modelo de usuario está conectado con el frontend, permitiendo:
-- Registro de nuevos usuarios.
-- Autenticación y manejo de perfiles.
-
-## Pruebas de API
-Se han realizado pruebas para verificar el funcionamiento de los endpoints de facturas. Todas las pruebas han sido satisfactorias y los endpoints funcionan según lo esperado. 
-
-Ejemplos de pruebas:
-- Creación de una factura con el valor del contador actual y verificación del cálculo automático del consumo y costo.
-- Validación de duplicados para evitar múltiples facturas para el mismo mes y usuario.
-- Verificación de errores al ingresar un contador actual menor que el contador anterior.
-
-## Instrucciones para Contribuir
-
-### Crear una Rama de Trabajo en Git
-Para mantener la organización y evitar conflictos, cada colaborador debe trabajar en su propia rama de Git.
-
-#### Pasos:
-1. **Crear una nueva rama**: Cambia `nombre_de_tu_rama` por un nombre relevante a la funcionalidad en la que estás trabajando.
-   ```bash
-   git checkout -b nombre_de_tu_rama
-   ```
-2. **Realizar cambios y hacer commit**:
-   ```bash
-   git add .
-   git commit -m "Descripción de los cambios realizados"
-   ```
-3. **Subir la rama a GitHub**:
-   ```bash
-   git push origin nombre_de_tu_rama
-   ```
-4. **Abrir un Pull Request (PR)** en GitHub para revisión. Asegúrate de describir bien los cambios en el PR.
-
-### Instrucciones de Instalación
-
-#### Clonar el Repositorio
 ```bash
 git clone https://github.com/samusplay/datamine_proyect.git
+```
+
+### Acceder al Directorio del Backend
+
+Navega al directorio del backend:
+
+```bash
 cd datamine_proyect/backend
 ```
 
-#### Crear y Activar el Entorno Virtual
+### Crear un Entorno Virtual
+
+Crea un entorno virtual para manejar las dependencias del proyecto:
+
 ```bash
 python3 -m venv env
-source env/bin/activate  # En macOS y Linux
-env\Scripts\activate  # En Windows
 ```
 
-#### Instalar Dependencias
+### Activar el Entorno Virtual
+
+- En macOS y Linux:
+
+  ```bash
+  source env/bin/activate
+  ```
+
+- En Windows:
+
+  ```bash
+  .\env\Scripts\activate
+  ```
+
+### Instalar Dependencias
+
+Instala todas las dependencias necesarias desde el archivo `requirements.txt`:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-#### Crear y Aplicar Migraciones
+### Crear y Aplicar Migraciones
+
+Ejecuta las migraciones de la base de datos:
+
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-#### Ejecutar el Servidor de Desarrollo
+---
+
+## Ejecución del Servidor y URLs
+
+Para ejecutar el servidor de desarrollo:
+
 ```bash
 python manage.py runserver
 ```
 
-## Notas Adicionales
-- La documentación actual cubre principalmente la API de facturas y el modelo de usuario. Para nuevas funcionalidades, asegúrate de actualizar el README para que esté siempre sincronizado con los cambios del código.
-- Siguiendo la metodología Lean Startup, cada iteración debe ser probada con usuarios reales y optimizada en función del feedback recibido.
+Accede a la aplicación en los siguientes URLs:
+
+- **API principal**: [http://localhost:8000/api/](http://localhost:8000/api/) *(Revisa si esta URL es la correcta de acuerdo a la configuración actual)*
+- **Módulo de Facturas**: [http://localhost:8000/api/facturas/](http://localhost:8000/api/facturas/)
+- **Módulo de Usuarios**: [http://localhost:8000/api/usuarios/](http://localhost:8000/api/usuarios/)
+- **Módulo de Contadores**: [http://localhost:8000/api/contadores/](http://localhost:8000/api/contadores/)
+- **Módulo de Pagos**: [http://localhost:8000/api/pagos/](http://localhost:8000/api/pagos/)
+- **Panel de Administración**: [http://localhost:8000/admin/](http://localhost:8000/admin/)
 
 ---
 
+## Estructura de Carpetas
+
+Esta es la estructura de carpetas del backend, organizada en módulos que corresponden a las funcionalidades de usuarios, facturas, pagos y contadores.
+
+```
+backend/
+├── api/                    # Módulo de API
+├── contadores/             # Módulo de gestión de contadores
+├── facturas/               # Módulo de facturación
+│   ├── migrations/         # Migraciones de la base de datos
+│   ├── models.py           # Modelos de base de datos de facturas
+│   ├── views.py            # Vistas y lógica de la API de facturas
+│   └── serializers.py      # Serializadores para formato JSON
+├── pagos/                  # Módulo de pagos
+│   ├── models.py
+│   ├── views.py
+│   └── serializers.py
+├── usuarios/               # Módulo de usuarios y autenticación
+│   ├── models.py
+│   ├── views.py
+│   └── serializers.py
+├── settings.py             # Configuración del proyecto
+├── urls.py                 # Rutas de la API
+└── wsgi.py                 # Configuración para el servidor WSGI
 ```
 
-### Explicación
+---
 
-Este README incluye todo lo que hemos discutido y trabajado en el backend. Asegúrate de incluir este Markdown en el archivo `README.md` de tu directorio `backend`, y luego puedes hacer commit y push de este archivo a GitHub.
+## Descripción de Archivos Clave
 
-Este enfoque paso a paso ayudará a tus compañeros a entender y colaborar en el proyecto, manteniendo claridad en los objetivos y un buen flujo de trabajo. Además, la metodología **Lean Startup** proporciona un marco para iterar rápidamente y validar el trabajo con usuarios finales, lo que permite ajustar y mejorar la aplicación de manera continua.
+### `models.py`
+
+Define los modelos de la base de datos para cada módulo (usuarios, facturas, pagos, contadores). Cada modelo representa una tabla en la base de datos:
+
+- **Facturas**: Contiene campos como `contador_mes_anterior`, `contador_mes_actual`, `consumo`, `costo_total`.
+- **Usuarios**: Gestiona la información de los usuarios que interactúan con la aplicación.
+- **Pagos**: Controla los registros de pagos y su estado.
+- **Contadores**: Almacena el número de contador de cada usuario para seguimiento de consumo.
+
+### `serializers.py`
+
+Convierte los datos de los modelos en JSON y viceversa, permitiendo que el frontend y el backend intercambien datos de forma estructurada.
+
+### `views.py`
+
+Contiene la lógica de las vistas de la API:
+
+- **FacturaListCreateView**: Vista para listar y crear facturas, calcula automáticamente el consumo de energía y el costo total.
+- **UsuarioListCreateView**: Vista para gestionar la creación y consulta de usuarios.
+- **PagoListCreateView**: Vista para la gestión de pagos realizados por los usuarios.
+
+### `urls.py`
+
+Define las rutas de cada endpoint. Configura los caminos para que el frontend pueda interactuar con los módulos del backend. Incluye:
+
+- `/api/facturas/` para el módulo de facturas.
+- `/api/usuarios/` para el módulo de usuarios.
+- `/api/pagos/` para el módulo de pagos.
+
+---
+
+## Endpoints y Funcionalidades
+
+1. **Usuarios**
+   - `POST /api/usuarios/crear/`: Crea un nuevo usuario en el sistema.
+   - `GET /api/usuarios/`: Lista todos los usuarios registrados.
+
+2. **Facturas**
+   - `POST /api/facturas/crear/`: Genera una nueva factura, calculando automáticamente el consumo basado en el contador.
+   - `GET /api/facturas/`: Lista todas las facturas registradas.
+
+3. **Pagos**
+   - `POST /api/pagos/`: Registra un pago nuevo y su estado.
+   - `GET /api/pagos/`: Lista todos los pagos registrados.
+
+---
+
+## Buenas Prácticas y Colaboración en GitHub
+
+### Creación de Ramas y Subida de Cambios
+
+Cada desarrollador debe trabajar en su propia rama para evitar conflictos:
+
+1. **Crear una nueva rama**:
+
+   ```bash
+   git checkout -b nombre-de-la-rama
+   ```
+
+2. **Realizar cambios** en el código y luego hacer un commit:
+
+   ```bash
+   git add .
+   git commit -m "Descripción breve del cambio"
+   ```
+
+3. **Subir la rama al repositorio remoto**:
+
+   ```bash
+   git push origin nombre-de-la-rama
+   ```
+
+4. **Solicitar un Pull Request** en GitHub para que los cambios puedan ser revisados e integrados en la rama principal (`master`).
+
+### Buenas Prácticas
+
+- **Usar nombres descriptivos** en los commits para facilitar la revisión del historial.
+- **Documentar funciones** y clases clave para que otros desarrolladores puedan entender la lógica del código.
+- **Mantener los archivos organizados** y en sus carpetas correspondientes para evitar confusión.
+
+---
+
+## Objetivos del Proyecto
+
+Este proyecto sigue la metodología **Lean Startup**. Los objetivos principales son:
+
+1. **Validar el MVP** en el menor tiempo posible para obtener retroalimentación.
+2. **Iterar sobre el producto**, haciendo mejoras en base a la retroalimentación de los usuarios.
+3. **Optimizar funcionalidades** esenciales (facturas, pagos y gestión de usuarios) para asegurar que el sistema sea escalable y eficiente.
+
+
